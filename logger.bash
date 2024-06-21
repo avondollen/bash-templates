@@ -12,9 +12,9 @@ logger ()
       "base_proc")
         logging_color=$(awk '{ sub(/.*rs=/, ""); sub(/:.*/, "");print }' <<< "${LS_COLORS}")
         ;;
-      # Child Processes - Terminal Color Scheme for *.bak files
+      # Child Processes - Format code for faint/dim text '[2m'
       "child_proc")
-        logging_color=$(awk '{ sub(/.*:*.bak=/, ""); sub(/:.*/, "");print }' <<< "${LS_COLORS}")
+        logging_color=2
         ;;
       # Success - Terminal Color Scheme for executable Files
       "success")
