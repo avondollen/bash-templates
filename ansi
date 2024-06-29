@@ -1,0 +1,34 @@
+#!/bin/env bash
+
+###########################
+#    ANSI Escape Codes
+###########################
+
+#  Formatting
+declare -r RESET_FORMATTING="\x1B[0m"
+declare -r BOLD="\x1B[1m"
+declare -r FAINT="\x1B[2m"
+declare -r ITALIC="\x1B[3m"
+declare -r UNDERLINED="\x1B[4m"
+declare -r INVERSE="\x1B[7m"
+declare -r STRIKETHROUGH="\x1B[9m"
+
+# Font Color Codes
+declare -r BLACK_TEXT="\x1B[30m"
+declare -r RED_TEXT="\x1B[31m"
+declare -r GREEN_TEXT="\x1B[32m"
+declare -r YELLOW_TEXT="\x1B[33m"
+declare -r BLUE_TEXT="\x1B[34m"
+declare -r MAGENTA_TEXT="\x1B[35m"
+declare -r CYAN_TEXT="\x1B[36m"
+declare -r WHITE_TEXT="\x1B[37m"
+
+# Background Color Codes
+declare -r BLACK_BACKGROUND="\x1B[40m"
+declare -r RED_BACKGROUND="\x1B[41m"
+declare -r GREEN_BACKGROUND="\x1B[42m"
+declare -r YELLOW_BACKGROUND="\x1B[43m"
+declare -r BLUE_BACKGROUND="\x1B[44m"
+declare -r MAGENTA_BACKGROUND="\x1B[45m"
+declare -r CYAN_BACKGROUND="\x1B[46m"
+declare -r WHITE_BACKGROUND="\x1B[47m"
