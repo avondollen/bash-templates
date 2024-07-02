@@ -1,0 +1,90 @@
+#!/bin/env bash
+
+# Global Variables
+script_name="$0"
+output_file=""
+verbose_mode=""
+debug_mode=""
+
+# Function to display aviable options
+usage() {
+ printf "%s\n\n" "Usage: $script_name [OPTIONS]"
+ printf "%s\n"   "Options:"
+ printf "%s\n"   " -f, --file      FILE Specify an output file"
+ printf "%s\n"   " -v, --verbose   Enable verbose mode"
+ printf "%s\n"   " -d, --debug     Enable debug mode"
+ printf "%s\n"   " -h, --help      Display this help message"
+ printf "\n"
+}
+
+has_argument() {
+    [[ ("$1" == *=* && -n ${1#*=}) || ( -n "$2" && "$2" != -*)  ]];
+}
+
+extract_argument() {
+  echo "${2:-${1#*=}}"
+}
+
+# Options and arguements handler
+handle_options() {
+  while [ $# -gt 0 ]; do
+    case $1 in
+      -f | --file*)
+        if ! has_argument "$@"; then
+          echo "File not specified." >&2
+          usage
+          exit 1
+        fi
+
+        output_file=$(extract_argument "$@")
+
+        shift
+        ;;
+      -v | --verbose)
+        verbose_mode=1
+        ;;
+      -d | --debug)
+        debug_mode=1
+        ;;
+      -h | --help)
+        usage
+        exit 0
+        ;;
+      *)
+        echo "Invalid option: $1" >&2
+        usage
+        exit 1
+        ;;
+    esac
+    shift
+  done
+}
+
+#############################
+#    Setup Script Params    #
+#############################
+handle_options "$@"
+
+if [ -n "$output_file" ]; then
+ echo "Output file specified: $output_file"
+fi
+
+if [ "$debug_mode" ]; then
+  echo "Debugging mode enabled"
+  set -o functrace
+  set -o verbose
+  set -o xtrace
+fi
+
+if [ "$verbose_mode" ]; then
+  echo "Verbose Mode Enabled"
+  set -o verbose
+fi
+
+#############################
+#          M A I N          #
+#############################
+
+lsb_release -a
+
+# ...
