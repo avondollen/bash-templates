@@ -1,67 +1,157 @@
 #!/bin/env bash
 
-# Formatting
+##### Formatting
+####declare -r RESET_FORMATTING="\x1B[0m"
+####declare -r BOLD="\x1B[1m"
+####declare -r FAINT="\x1B[2m"
+####
+##### Font Color Codes
+####declare -r RED_TEXT="\x1B[31m"
+####declare -r GREEN_TEXT="\x1B[32m"
+####declare -r BLUE_TEXT="\x1B[34m"
+####
+##### Background Color Codes
+####declare -r BLACK_BACKGROUND="\x1B[40m"
+####
+##### Basic colorized logging method.
+##### If environment variable LS_COLORS is not set, color formatting is not used.
+####logger ()
+####{
+####  if [ "$LS_COLORS" ]; then    
+####    case $1 in
+####      INFO)
+####        printf "${RESET_FORMATTING}%s\n" "$2"
+####        ;;
+####      CHILD)
+####        printf "${FAINT}%s${RESET_FORMATTING}\n" "$2"
+####        ;;
+####      SUCCESS)
+####        printf "${BOLD}${GREEN_TEXT}%s${RESET_FORMATTING}\n" "$2"
+####        ;;
+####      ERROR)
+####        printf "${BOLD}${RED_TEXT}${BLACK_BACKGROUND}%s${RESET_FORMATTING}\n" "$2"
+####        ;;
+####      DEBUG)
+####        printf "${BOLD}${BLUE_TEXT}%s${RESET_FORMATTING}\n" "$2"
+####        ;;
+####      *)
+####        logger ERROR "[Function:Logger]: invalid param: '$1'"
+####        printf "\n"
+####        exit 1
+####        ;;
+####    esac
+####  else
+####    printf "%s\n" "$2"
+####  fi
+####}
+####
+####
+####logger INFO    "--------------------------------------------"
+####logger INFO    "   B A S H    L O G G I N G    D E M O      "
+####logger INFO    "--------------------------------------------"
+####logger INFO    "Base proccess doing things."
+####logger CHILD   "Sub proccess doing things 1/3....."
+####logger CHILD   "Sub proccess doing things 2/3....."
+####logger CHILD   "Sub proccess doing things 3/3....."
+####logger SUCCESS "Sub proccess executed successfully."
+####logger INFO    "Printing Distro Description"
+####logger CHILD   "$(lsb_release -d)"
+####logger ERROR   "Exit-Code: 2 - error example"
+####logger DEBUG   "debugging example"
+####logger INFO    "--------------------------------------------"
+####printf "\n"
+####logger INFO "Showing loggers ability to handle bad inputs"
+####logger "goofed" "Lets break the logger function."
+####
+##### Note: As  long as line 59 is present nothing else below will execute!
+####logger INFO "This will only be printed in line 59 is commented out/removed!"
+####
+
 declare -r RESET_FORMATTING="\x1B[0m"
-declare -r BOLD="\x1B[1m"
-declare -r FAINT="\x1B[2m"
+declare -r CYAN_TEXT="\x1B[36m"
 
-# Font Color Codes
-declare -r RED_TEXT="\x1B[31m"
-declare -r GREEN_TEXT="\x1B[32m"
-declare -r BLUE_TEXT="\x1B[34m"
-
-# Background Color Codes
-declare -r BLACK_BACKGROUND="\x1B[40m"
-
-# Basic colorized logging method.
-# If environment variable LS_COLORS is not set, color formatting is not used.
-logger ()
-{
-  if [ "$LS_COLORS" ]; then    
-    case $1 in
-      INFO)
-        printf "${RESET_FORMATTING}%s\n" "$2"
-        ;;
-      CHILD)
-        printf "${FAINT}%s${RESET_FORMATTING}\n" "$2"
-        ;;
-      SUCCESS)
-        printf "${BOLD}${GREEN_TEXT}%s${RESET_FORMATTING}\n" "$2"
-        ;;
-      ERROR)
-        printf "${BOLD}${RED_TEXT}${BLACK_BACKGROUND}%s${RESET_FORMATTING}\n" "$2"
-        ;;
-      DEBUG)
-        printf "${BOLD}${BLUE_TEXT}%s${RESET_FORMATTING}\n" "$2"
-        ;;
-      *)
-        logger ERROR "[Function:Logger]: invalid param: '$1'"
-        printf "\n"
-        exit 1
-        ;;
-    esac
-  else
-    printf "%s\n" "$2"
-  fi
+function print_blue () {
+   echo "wat"
+   printf "$CYAN_TEXT%s\n$RESET_FORMATTING" "$1"
 }
 
 
-logger INFO    "--------------------------------------------"
-logger INFO    "   B A S H    L O G G I N G    D E M O      "
-logger INFO    "--------------------------------------------"
-logger INFO    "Base proccess doing things."
-logger CHILD   "Sub proccess doing things 1/3....."
-logger CHILD   "Sub proccess doing things 2/3....."
-logger CHILD   "Sub proccess doing things 3/3....."
-logger SUCCESS "Sub proccess executed successfully."
-logger INFO    "Printing Distro Description"
-logger CHILD   "$(lsb_release -d)"
-logger ERROR   "Exit-Code: 2 - error example"
-logger DEBUG   "debugging example"
-logger INFO    "--------------------------------------------"
-printf "\n"
-logger INFO "Showing loggers ability to handle bad inputs"
-logger "goofed" "Lets break the logger function."
+## upperconv.sh
+## Converts a specified input file to uppercase.
+#
+#E_FILE_ACCESS=70
+#E_WRONG_ARGS=71
+#
+#if [ ! -r "$1" ]     # Is specified input file readable?
+#then
+#  echo "Can't read from input file!"
+#  echo "Usage: $0 input-file output-file"
+#  exit $E_FILE_ACCESS
+#fi                   #  Will exit with same error
+#                     #+ even if input file ($1) not specified (why?).
+#
+#if [ -z "$2" ]
+#then
+#  echo "Need to specify output file."
+#  echo "Usage: $0 input-file output-file"
+#  exit $E_WRONG_ARGS
+#fi
+#
+#
+#exec 4<&0
+#exec < $1            # Will read from input file.
+#
+#exec 7>&1
+#exec > $2            # Will write to output file.
+#                     # Assumes output file writable (add check?).
+#
+## The file descriptors for stdin, stdout, and stderr are 0, 1, and 2, respectively. For opening additional files, there remain descriptors 3 to 9.
+## Will redirect std out to function print_blue with file descriptor 6.
+#exec 6>&1
+#exec > $print_blue
+#
+#
+## -----------------------------------------------
+#    cat - | tr a-z A-Z   # Uppercase conversion.
+##   ^^^^^                # Reads from stdin.
+##           ^^^^^^^^^^   # Writes to stdout.
+## However, both stdin and stdout were redirected.
+## Note that the 'cat' can be omitted.
+## -----------------------------------------------
+#
+#exec 1>&7 7>&-       # Restore stout.
+#exec 1>&6 6>&-
+#exec 0<&4 4<&-       # Restore stdin.
+#
+## After restoration, the following line prints to stdout as expected.
+#echo "File \"$1\" written to \"$2\" as uppercase conversion."
+#print_blue "Hello World"
+#
+#exit 0
 
-# Note: As  long as line 59 is present nothing else below will execute!
-logger INFO "This will only be printed in line 59 is commented out/removed!"
+
+export COLOR_RED="$(tput setaf 4)"
+export COLOR_RESET="$(tput sgr0)"
+
+
+
+exec 9>&2
+exec 8> >(
+    perl -e '$|=1; while(sysread STDIN,$a,9999) {print 
+"$ENV{COLOR_RED}$a$ENV{COLOR_RESET}"}'
+)
+function undirect(){ exec 2>&9; }
+function redirect(){ exec 2>&8; } 
+trap "redirect;" DEBUG
+
+
+#set -o functrace
+#set -o verbose
+#set -o xtrace
+
+sl
+
+
+ls -alF
+
+ls alf
