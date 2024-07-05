@@ -1,0 +1,25 @@
+#!/bin/env bash
+
+export BOLD_TEXT="$(tput bold)"
+export COLOR_RESET="$(tput sgr0)"
+
+export COLOR_CYAN="$(tput setaf 6)"
+
+exec 6> >(
+    perl -e '$|=1; while(sysread STDIN,$a,9999) {print 
+"$ENV{BOLD_TEXT}$ENV{COLOR_CYAN}$a$ENV{COLOR_RESET}"}'
+)
+
+function stderr_redirect(){ exec 2>&6; } 
+trap "stderr_redirect;" DEBUG
+
+echo "Command that does not error will be the default teminal color"
+echo "Example executing command ls -alF --color=auto"
+ls -alF --color=auto
+
+echo ""
+echo "Showing a command that prints to stderr"
+echo "This will be trapped, then redirected to format the text to cyan color"
+ls --alF --color-auto
+
+echo ""
