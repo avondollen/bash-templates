@@ -7,7 +7,7 @@ export CYAN_TEXT="36"
 exec 7> >( perl -e '$|=1; while(sysread STDIN,$LINE,9999)
                           {
                             printf "\x1b[%sm\x1b[%sm%s\x1b[%sm", $ENV{BOLD_TEXT},
-                                                                 $ENV{BLUE_TEXT},
+                                                                 $ENV{CYAN_TEXT},
                                                                  $LINE,
                                                                  $ENV{RESET_FORMATTING}
                           }'
