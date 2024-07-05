@@ -1,16 +1,19 @@
 #!/bin/env bash
 
-export BOLD_TEXT="$(tput bold)"
-export COLOR_RESET="$(tput sgr0)"
+export RESET_FORMATTING="0"
+export BOLD_TEXT="1"
+export CYAN_TEXT="36"
 
-export COLOR_CYAN="$(tput setaf 6)"
+exec 7> >( perl -e '$|=1; while(sysread STDIN,$LINE,9999)
+                          {
+                            printf "\x1b[%sm\x1b[%sm%s\x1b[%sm", $ENV{BOLD_TEXT},
+                                                                 $ENV{BLUE_TEXT},
+                                                                 $LINE,
+                                                                 $ENV{RESET_FORMATTING}
+                          }'
+          )
 
-exec 6> >(
-    perl -e '$|=1; while(sysread STDIN,$a,9999) {print 
-"$ENV{BOLD_TEXT}$ENV{COLOR_CYAN}$a$ENV{COLOR_RESET}"}'
-)
-
-function stderr_redirect(){ exec 2>&6; } 
+function stderr_redirect(){ exec 2>&7;} 
 trap "stderr_redirect;" DEBUG
 
 echo "Command that does not error will be the default teminal color"
@@ -19,7 +22,7 @@ ls -alF --color=auto
 
 echo ""
 echo "Showing a command that prints to stderr"
-echo "This will be trapped, then redirected to format the text to cyan color"
+echo "This will be trapped, then redirected to format the text to bold cyan."
 ls --alF --color-auto
 
 echo ""
