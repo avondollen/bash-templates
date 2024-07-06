@@ -1,0 +1,71 @@
+#!/bin/env bash
+
+# Formatting
+declare -r RESET_FORMATTING="\x1B[0m"
+declare -r BOLD="\x1B[1m"
+declare -r FAINT="\x1B[2m"
+
+# Font Color Codes
+declare -r RED_TEXT="\x1B[31m"
+declare -r GREEN_TEXT="\x1B[32m"
+declare -r BLUE_TEXT="\x1B[34m"
+
+# Background Color Codes
+declare -r BLACK_BACKGROUND="\x1B[40m"
+
+# Basic colorized logging method.
+# If environment variable LS_COLORS is not set, color formatting is not used.
+logger ()
+{
+  if [ "$LS_COLORS" ]; then    
+    case $1 in
+      INFO)
+        printf "${RESET_FORMATTING}%s\n" "$2"
+        ;;
+      CHILD)
+        printf "${FAINT}%s${RESET_FORMATTING}\n" "$2"
+        ;;
+      SUCCESS)
+        printf "${BOLD}${GREEN_TEXT}%s${RESET_FORMATTING}\n" "$2"
+        ;;
+      ERROR)
+        printf "${BOLD}${RED_TEXT}${BLACK_BACKGROUND}%s${RESET_FORMATTING}\n" "$2"
+        ;;
+      DEBUG)
+        printf "${BOLD}${BLUE_TEXT}%s${RESET_FORMATTING}\n" "$2"
+        ;;
+      *)
+        logger ERROR "[Function:Logger]: invalid param: '$1'"
+        printf "\n"
+        exit 1
+        ;;
+    esac
+  else
+    printf "%s\n" "$2"
+  fi
+}
+
+function closing_time()
+{
+  printf "\n"
+  logger SUCCESS "Work now completed!"
+  logger DEBUG "Good Bye"
+  printf "\n"
+  exit 0
+}
+
+# End Script when Crtl+C or Crtl+D is detected.
+# SIGINT	2	Issued if the user sends an interrupt signal (Ctrl + C)
+# SIGQUIT	3	Issued if the user sends a quit signal (Ctrl + D)
+trap closing_time 2 3
+
+declare -i x=0
+declare -i y=1
+while :
+do
+  logger CHILD "Working on long task... $x"
+  sleep $y
+  ((x++))
+  ((y++))
+done
+
