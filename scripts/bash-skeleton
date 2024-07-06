@@ -1,0 +1,57 @@
+#!/bin/env bash
+
+################################################
+#   B A S H    S C R I P T   T E M P L A T E   # 
+################################################
+
+# Global & Environment Variables
+
+# Integers
+declare -i x=0
+
+
+
+###################
+#   L O G G E R   #
+###################
+
+###################################
+#  O P T I O N S   H A N D L E R  #
+###################################
+
+
+#######################
+#  F U N C T I O N S  #
+#######################
+
+# Let's Clean up after ourselves
+function closing_time()
+{
+  printf "\n"
+  printf "%s\n" "Perform Script Cleanup Duties here"
+  printf "%s\n" "Like removing temp files, and undoing system changes"
+  printf "\n"
+  exit 0
+}
+
+
+#########################################
+# T R A P S  &  I/O  R E D I R E C T S  #
+#########################################
+
+# Cancle Script Trap
+# (2):SIGINT	-	Issued if the user sends an interrupt signal (Ctrl + C)
+# (3):SIGQUIT -	Issued if the user sends a quit signal (Ctrl + D)
+trap closing_time 2 3
+
+
+#############
+#  M A I N  #
+#############
+
+while :
+do
+  printf "Working on long task...  %s\n" "$x"
+  sleep $x
+  ((x++))
+done
