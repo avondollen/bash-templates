@@ -1,28 +1,49 @@
 #!/bin/env bash
 
-export RESET_FORMATTING="0"
-export BOLD_TEXT="1"
-export CYAN_TEXT="36"
-
-exec 7> >( perl -e '$|=1; while(sysread STDIN,$LINE,9999)
-                          {
-                            printf "\x1b[%sm\x1b[%sm%s\x1b[%sm", $ENV{BOLD_TEXT},
-                                                                 $ENV{CYAN_TEXT},
-                                                                 $LINE,
-                                                                 $ENV{RESET_FORMATTING}
+exec {SUCCESS}> >( perl -e '$|=1; while(sysread STDIN,$LINE,9999)
+                          { # Bold Green
+                            printf "\x1B[1m\x1B[32m%s\x1B[0m", $LINE
                           }'
           )
 
-function stderr_redirect(){ exec 2>&7;} 
-trap "stderr_redirect;" DEBUG
+exec {DEBUG}> >( perl -e '$|=1; while(sysread STDIN,$LINE,9999)
+                          { # Bold Cyan
+                            printf "\x1B[1m\x1B[36m%s\x1B[0m", $LINE
+                          }'
+          )
 
-echo "Command that does not error will be the default teminal color"
-echo "Example executing command ls -alF --color=auto"
-ls -alF --color=auto
+exec {ERROR}> >( perl -e '$|=1; while(sysread STDIN,$LINE,9999)
+                          { # [ Bold Red ] - Normal Text
+                            printf "[\x1B[1m\x1B[31mERROR\x1B[0m]: %s", $LINE
+                          }'
+          )
 
-echo ""
-echo "Showing a command that prints to stderr"
-echo "This will be trapped, then redirected to format the text to bold cyan."
-ls --alF --color-auto
+exec {CHILD}> >( perl -e '$|=1; while(sysread STDIN,$LINE,9999)
+                          { # Faint Text
+                            printf "\x1B[2m%s\x1B[0m", $LINE
+                          }'
+          )
 
-echo ""
+
+# Example of using File Desciptors to redirect specific output
+printf "%s\n"  "--------------------------------------------"
+printf "%s\n"  "   B A S H    L O G G I N G    D E M O      "
+printf "%s\n"  "--------------------------------------------"
+printf "%s\n"  "Base proccess doing things."
+printf "%s\n"  "Sub proccess doing things 1/3....." >&${CHILD}; sleep 1
+printf "%s\n"  "Sub proccess doing things 2/3....." >&${CHILD}; sleep 1
+printf "%s\n"  "Sub proccess doing things 3/3....." >&${CHILD}; sleep 1
+printf "%s\n"  "Sub proccess executed... SUCCESSFULLY!" >&${SUCCESS}; sleep 1
+printf "%s\n"  "Exit-Code:2 - error example" >&${ERROR}; sleep 0.5
+printf "%s\n"  "debugging example" >&${DEBUG}; sleep 1
+printf "%s\n"   "--------------------------------------------"
+printf "\n"
+
+
+# Example of trapping STDERR
+exec 2>&${ERROR} # Set's all stderr to be redirected to ERROR
+phoney_command_caught_by_ERROR
+
+# Resetting stderr to be displayed via stdout
+exec 2>&1
+phoney_command_boring_stdout
