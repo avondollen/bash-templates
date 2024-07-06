@@ -59,13 +59,11 @@ function closing_time()
 # SIGQUIT	3	Issued if the user sends a quit signal (Ctrl + D)
 trap closing_time 2 3
 
-declare -i x=0
-declare -i y=1
+declare -i x=1
 while :
 do
   logger CHILD "Working on long task... $x"
-  sleep $y
+  sleep $x
   ((x++))
-  ((y++))
 done
 
