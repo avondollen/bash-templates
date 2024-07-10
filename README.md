@@ -9,6 +9,7 @@ A library of common design patterns used in bash scripting.
 * [loggerV2](scripts/loggerV2) - Colorize through file descriptor redirect.
 * [trap](scripts/trap) - Example usage of trap, Cleanly stops script when (Ctrl+C) signal is triggered.
 * [ansi](scripts/ansi) - List of ANSI Escape codes for formatting, and color.
+* [date_formats](scripts/date_formats) - List of common Time & Date formatting strings.
 
 ## References
 

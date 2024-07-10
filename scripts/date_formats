@@ -1,0 +1,59 @@
+#!/bin/env bash
+
+##########################
+#  IBM 7.4 Date Formats  #
+##########################
+
+# MDY (Month day, year)
+declare -r MDY='+%B %d, %Y'
+# DMY (Day, month year)
+declare -r DMY='+%d, %B %Y'
+# YMD (Year, Month Day)
+declare -r YMD='+%Y, %B %d'
+# ISO (YYYY-MM-DD)
+declare -r ISO_DATE_FORMAT='+%Y-%m-%d'
+# USA (MM/DD/YYYY)
+declare -r USA_DATE_FORMAT='+%m/%d/%Y'
+
+
+##########################
+#  IBM 7.4 Time Formats  #
+##########################
+
+# HMS (hh:mm:ss) 24H 
+declare -r HMS='+%T'
+# ISO (hh.mm.ss)
+declare -r ISO_TIME_FORMAT='+%H.%M.%S'
+# USA (hh:mm AM or hh:mm PM)
+declare -r USA_TIME_FORMAT='+%I:%M %p'
+
+# EPOC Time
+declare -r EPOCH='+%s'
+
+
+#############################
+#    Date & Time Formats    #
+#############################
+
+# Date & Time
+declare -r DATETIME='+%a %Y-%m-%d | %H.%M.%S %Z'
+
+# Long YMD & Time w/ TimeZone
+declare -r YMD_TIME='+%Y, %B %d - %H.%M.%S %Z'
+
+# Long MDY & Time w/ TimeZone
+declare -r MDY_TIME='+%A %B %d %Y | %H.%M.%S %Z'
+
+# Display the various ways to print the date and time.
+#date "$MDY"
+#date "$DMY"
+#date "$YMD"
+#date "$ISO_DATE_FORMAT"
+#date "$USA_DATE_FORMAT"
+#date "$HMS"
+#date "$ISO_TIME_FORMAT"
+#date "$USA_TIME_FORMAT"
+#date "$EPOCH"
+#date "$DATETIME"
+#date "$YMD_TIME"
+#date "$MDY_TIME"
